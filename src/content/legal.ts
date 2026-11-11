@@ -7,7 +7,10 @@ export type LegalDoc = {
 };
 
 const company =
-  "DameBola es una marca propiedad de y operada por DameBola LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos. Prepara un servicio de transporte enfocado en la República Dominicana. El sitio oficial es https://www.damebolaapp.com y el correo de contacto es Info@DameBolaApp.com.";
+  "DameBola es una marca propiedad de y operada por DAMEBOLA LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos. Prepara un servicio de transporte enfocado en la República Dominicana. El sitio oficial es https://www.damebolaapp.com y el correo de contacto es Info@DameBolaApp.com.";
+
+const companyEn =
+  "DameBola is a brand owned and operated by DAMEBOLA LLC, a limited liability company registered in Florida, United States. It is preparing a transportation service focused on the Dominican Republic. The official website is https://www.damebolaapp.com and the contact email is Info@DameBolaApp.com.";
 
 const docsEs: Record<string, LegalDoc> = {
   terminos: {
@@ -22,13 +25,13 @@ const docsEs: Record<string, LegalDoc> = {
       { kind: "h", text: "Cuentas y aplicaciones" },
       { kind: "p", text: "Crear una cuenta de pasajero o de conductor en la app todavía no está disponible desde esta web. Un enlace de tienda solo se mostrará cuando sea el enlace oficial." },
       { kind: "h", text: "Propiedad intelectual" },
-      { kind: "p", text: "El nombre DameBola, el logo y los textos de este sitio pertenecen a DameBola LLC o a sus licenciantes. No copies el logo ni presentes otra marca como si fuera DameBola." },
+      { kind: "p", text: "El nombre DameBola, el logo y los textos de este sitio pertenecen a DAMEBOLA LLC o a sus licenciantes. No copies el logo ni presentes otra marca como si fuera DameBola." },
       { kind: "h", text: "Sin garantías de operación" },
       { kind: "p", text: "El servicio de viajes está en pre-lanzamiento. No prometemos disponibilidad, tiempos de llegada, cobertura, ingresos ni que una función marcada como Próximamente ya exista." },
       { kind: "h", text: "Responsabilidad" },
-      { kind: "p", text: "DameBola LLC revisa de buena fe los formularios que este sitio recibe. El sitio se ofrece en su estado actual y no asigna viajes." },
+      { kind: "p", text: "DAMEBOLA LLC revisa de buena fe los formularios que este sitio recibe. El sitio se ofrece en su estado actual y no asigna viajes." },
       { kind: "h", text: "Ley aplicable" },
-      { kind: "p", text: "DameBola LLC está organizada bajo las leyes de Florida, Estados Unidos. Estos términos rigen el uso de este sitio. No quitan derechos que la ley de Estados Unidos o de la República Dominicana no permita renunciar." },
+      { kind: "p", text: "DAMEBOLA LLC está organizada bajo las leyes de Florida, Estados Unidos. Estos términos rigen el uso de este sitio. No quitan derechos que la ley de Estados Unidos o de la República Dominicana no permita renunciar." },
       { kind: "h", text: "Cambios" },
       { kind: "p", text: "Podemos actualizar estos términos publicando el nuevo texto en esta página. La fecha de la página es la versión vigente. Si sigues usando el sitio después de un cambio, aplica el texto actualizado." },
     ],
@@ -80,11 +83,12 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Términos para conductores",
     description: "Condiciones de la preinscripción de conductores en este sitio.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "p", text: "Estos términos regulan la preinscripción en el sitio. No son el contrato con el que se activará un conductor en la aplicación." },
       { kind: "h", text: "La preinscripción no es una activación" },
       { kind: "p", text: "Enviar el formulario crea una solicitud en estado Pendiente. Una persona puede marcarla como En revisión, Aprobada, Rechazada o Se requiere más información. Nada de eso ocurre solo. Aprobada, durante el pre-lanzamiento, no enciende una cuenta en la app ni autoriza a recibir viajes." },
       { kind: "h", text: "Relación jurídica" },
-      { kind: "p", text: "Enviar este formulario no te convierte en empleado ni en contratista independiente de DameBola LLC, y no activa una cuenta de conductor." },
+      { kind: "p", text: "Enviar este formulario no te convierte en empleado ni en contratista independiente de DAMEBOLA LLC, y no activa una cuenta de conductor." },
       { kind: "h", text: "Información y documentos" },
       { kind: "p", text: "Debes enviar datos verdaderos. Los requisitos visibles en el formulario son los que el administrador tiene publicados. Los archivos quedan en custodia privada y pueden usarse para una verificación futura." },
       { kind: "h", text: "Vehículo, permisos y seguro" },
@@ -99,6 +103,7 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Términos para pasajeros",
     description: "Condiciones para quienes usarán DameBola para viajar, cuando la aplicación esté disponible.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "p", text: "La cuenta de pasajero y la solicitud de viajes se harán en la aplicación. Este sitio todavía no abre esa cuenta ni reserva un vehículo." },
       { kind: "h", text: "La tarifa se propone" },
       { kind: "p", text: "Podrás indicar cuánto quieres pagar. Un conductor podrá aceptar o responder con otro monto. Los ejemplos del sitio, incluido RD$250 y RD$300, son ilustrativos." },
@@ -114,6 +119,7 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Política de cookies",
     description: "Qué se guarda en el navegador y qué medición no usa cookies.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "h", text: "Esenciales" },
       { kind: "ul", items: [
         "db_consent recuerda si aceptaste la analítica o solo lo esencial.",
@@ -131,6 +137,7 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Normas de la comunidad",
     description: "Estándar de trato que DameBola espera.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "p", text: "Estas normas describen el trato que DameBola espera en este sitio y, cuando las aplicaciones estén disponibles, en el servicio." },
       { kind: "ul", items: [
         "Trata con respeto a pasajeros, conductores y al equipo.",
@@ -147,6 +154,7 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Política de seguridad",
     description: "Principios de seguridad de DameBola y el límite de lo que ya funciona.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "p", text: "La seguridad se construye por partes. Esta política no convierte una función futura en una función actual." },
       { kind: "h", text: "Lo que el sitio ya hace" },
       { kind: "ul", items: [
@@ -167,6 +175,7 @@ const docsEs: Record<string, LegalDoc> = {
     title: "Eliminación de datos",
     description: "Cómo pedir que revisemos o eliminemos datos personales guardados por el sitio de DameBola.",
     blocks: [
+      { kind: "p", text: company },
       { kind: "h", text: "Qué puedes pedir" },
       { kind: "p", text: "Puedes pedir la eliminación de una preinscripción, un mensaje, una suscripción o los documentos que enviaste. También puedes pedir saber qué tenemos asociado a tu correo." },
       { kind: "h", text: "Cómo pedirlo" },
@@ -184,7 +193,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Terms and Conditions",
     description: "Terms for using the DameBola website.",
     blocks: [
-      { kind: "p", text: "DameBola is a brand owned and operated by DameBola LLC, a limited liability company registered in Florida, United States, preparing a transportation service focused on the Dominican Republic. The official website is https://www.damebolaapp.com and the contact email is Info@DameBolaApp.com." },
+      { kind: "p", text: "DameBola is a brand owned and operated by DAMEBOLA LLC, a limited liability company registered in Florida, United States, preparing a transportation service focused on the Dominican Republic. The official website is https://www.damebolaapp.com and the contact email is Info@DameBolaApp.com." },
       { kind: "h", text: "What this website is" },
       { kind: "p", text: "This website introduces DameBola, explains negotiated fares, and accepts driver pre-registrations, messages, and launch subscriptions. It does not request or dispatch trips. That will belong to the mobile apps when they are published." },
       { kind: "h", text: "Acceptable use" },
@@ -192,13 +201,13 @@ const docsEn: Record<string, LegalDoc> = {
       { kind: "h", text: "Accounts and apps" },
       { kind: "p", text: "Creating a rider or driver account in the app is not available from this website yet. A store link is shown only when it is the official link." },
       { kind: "h", text: "Intellectual property" },
-      { kind: "p", text: "The DameBola name, logo, and text on this site belong to DameBola LLC or its licensors. Do not copy the logo or present another brand as DameBola." },
+      { kind: "p", text: "The DameBola name, logo, and text on this site belong to DAMEBOLA LLC or its licensors. Do not copy the logo or present another brand as DameBola." },
       { kind: "h", text: "No operating guarantees" },
       { kind: "p", text: "The ride service is in pre-launch. We do not promise availability, arrival times, coverage, earnings, or that a feature marked Coming soon already exists." },
       { kind: "h", text: "Liability" },
-      { kind: "p", text: "DameBola LLC reviews in good faith the forms this website receives. The site is provided as it is and does not dispatch trips." },
+      { kind: "p", text: "DAMEBOLA LLC reviews in good faith the forms this website receives. The site is provided as it is and does not dispatch trips." },
       { kind: "h", text: "Governing law" },
-      { kind: "p", text: "DameBola LLC is organized under the laws of Florida, United States. These terms govern use of this website. They do not take away rights that the law of the United States or the Dominican Republic does not allow to be waived." },
+      { kind: "p", text: "DAMEBOLA LLC is organized under the laws of Florida, United States. These terms govern use of this website. They do not take away rights that the law of the United States or the Dominican Republic does not allow to be waived." },
       { kind: "h", text: "Changes" },
       { kind: "p", text: "We may update these terms by publishing the new text on this page. The date on the page is the current version. If you keep using the website after a change, the updated text applies." },
     ],
@@ -207,7 +216,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Privacy Policy",
     description: "The personal data the DameBola website collects and how it is used.",
     blocks: [
-      { kind: "p", text: "DameBola is a brand owned and operated by DameBola LLC, a Florida limited liability company preparing a service for the Dominican Republic. Contact: Info@DameBolaApp.com." },
+      { kind: "p", text: "DameBola is a brand owned and operated by DAMEBOLA LLC, a Florida limited liability company preparing a service for the Dominican Republic. Contact: Info@DameBolaApp.com." },
       { kind: "h", text: "Data we collect" },
       { kind: "ul", items: [
         "Identity and contact details you type into forms: name, phone, email, city, and the reason for your message.",
@@ -250,11 +259,12 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Driver Terms",
     description: "Terms for driver pre-registration on this website.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "p", text: "These terms cover pre-registration on the website. They are not the agreement that will activate a driver in the app." },
       { kind: "h", text: "Pre-registration is not activation" },
       { kind: "p", text: "Sending the form creates a Pending application. A person may mark it Under review, Approved, Rejected, or More information required. None of that happens by itself. Approved, during pre-launch, does not turn on an app account or authorize trips." },
       { kind: "h", text: "Legal relationship" },
-      { kind: "p", text: "Sending this form does not make you an employee or an independent contractor of DameBola LLC, and it does not activate a driver account." },
+      { kind: "p", text: "Sending this form does not make you an employee or an independent contractor of DAMEBOLA LLC, and it does not activate a driver account." },
       { kind: "h", text: "Information and documents" },
       { kind: "p", text: "You must send truthful information. The requirements shown on the form are the ones an administrator has published. Files stay in private storage and may be used for future verification." },
       { kind: "h", text: "Vehicle, permits, and insurance" },
@@ -269,6 +279,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Passenger Terms",
     description: "Terms for people who will ride with DameBola once the app is available.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "p", text: "Rider accounts and trip requests will happen in the app. This website does not open that account or reserve a vehicle yet." },
       { kind: "h", text: "The fare is proposed" },
       { kind: "p", text: "You will be able to say what you want to pay. A driver will be able to accept or answer with another amount. Website examples, including RD$250 and RD$300, are illustrative." },
@@ -284,6 +295,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Cookie Policy",
     description: "What is stored in the browser, and which measurement does not use cookies.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "h", text: "Essential" },
       { kind: "ul", items: [
         "db_consent remembers whether you accepted analytics or essentials only.",
@@ -301,6 +313,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Community Guidelines",
     description: "The standard of conduct DameBola expects.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "p", text: "These guidelines describe the conduct DameBola expects on this website and, when the apps are available, in the service." },
       { kind: "ul", items: [
         "Treat riders, drivers, and the team with respect.",
@@ -317,6 +330,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Safety Policy",
     description: "DameBola safety principles, and the line between what works and what does not.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "p", text: "Safety is built in parts. This policy does not turn a future feature into a current one." },
       { kind: "h", text: "What the website already does" },
       { kind: "ul", items: [
@@ -337,6 +351,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Data deletion",
     description: "How to ask DameBola to review or delete personal data stored by this website.",
     blocks: [
+      { kind: "p", text: companyEn },
       { kind: "h", text: "What you can ask" },
       { kind: "p", text: "You can ask us to delete a pre-registration, a message, a subscription, or documents you sent. You can also ask what we hold for your email." },
       { kind: "h", text: "How to ask" },

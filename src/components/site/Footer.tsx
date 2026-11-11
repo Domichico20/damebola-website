@@ -93,7 +93,7 @@ export function Footer({
           </div>
         ) : null}
         <div className="mt-6 flex flex-col gap-2 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
-          <p>© {year} DameBola LLC. {dict.footer.rights}</p>
+          <p>© {year} DAMEBOLA LLC. {dict.footer.rights}</p>
           <div className="space-y-1 md:text-right">
             <p>{dict.footer.brand}</p>
             <p><a className="hover:text-white" href={`mailto:${email}`}>{email}</a></p>

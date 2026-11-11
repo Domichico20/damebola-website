@@ -21,7 +21,7 @@ const settings: Record<string, string> = {
   gaMeasurementId: "",
   announcementEnabled: "true",
   promotionEnabled: "true",
-  legalName: "DameBola",
+  legalName: "DAMEBOLA LLC",
   companyAddress: "",
 };
 

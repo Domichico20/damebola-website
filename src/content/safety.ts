@@ -115,11 +115,9 @@ export const safetySeed: Array<{
     sortOrder: 11,
     status: "live",
     titleEs: "Atención por el sitio",
-    bodyEs:
-      "El formulario de contacto guarda tu mensaje para el equipo. El correo de la empresa es Info@DameBolaApp.com. La respuesta automática depende de que el buzón del servidor esté configurado.",
+    bodyEs: "El formulario de contacto guarda tu mensaje para el equipo. El correo de la empresa es Info@DameBolaApp.com.",
     titleEn: "Support on the website",
-    bodyEn:
-      "The contact form stores your message for the team. The company email is Info@DameBolaApp.com. An automatic email reply depends on the server mailbox being configured.",
+    bodyEn: "The contact form stores your message for the team. The company email is Info@DameBolaApp.com.",
   },
   {
     id: "privacy",

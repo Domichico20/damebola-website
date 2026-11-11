@@ -15,7 +15,7 @@ export const settingDefaults = {
   gaMeasurementId: "",
   announcementEnabled: "true",
   promotionEnabled: "true",
-  legalName: "DameBola LLC",
+  legalName: "DAMEBOLA LLC",
   companyAddress: "",
 } as const;
 
