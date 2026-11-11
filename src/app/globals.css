@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-manrope), "Segoe UI", sans-serif;
+  --font-display: var(--font-outfit), "Segoe UI", sans-serif;
+  --color-navy-950: #040a16;
+  --color-navy-900: #071227;
+  --color-navy-800: #0c1e3f;
+  --color-navy-700: #16325f;
+  --color-blue-700: #0047cc;
+  --color-blue-600: #0057f5;
+  --color-blue-500: #1a86ff;
+  --color-blue-400: #55adff;
+  --color-cyan-300: #8aebff;
+  --color-cyan-400: #39d4ff;
+  --color-pin: #2fce62;
+  --color-pin-deep: #0e7a38;
+  --color-paper: #f4f7fb;
+  --color-mist: #e7eef7;
+  --color-ink: #0c1730;
+  --color-slate: #3e5068;
+  --color-line: #d5e0ee;
+  --color-danger: #9f1d1d;
+  --color-success: #0f7a3a;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background: #040a16;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: #b7dcff;
+    color: #071227;
+  }
+  :focus-visible {
+    outline: 3px solid #39d4ff;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility text-gradient {
+  background: linear-gradient(100deg, #ffffff 0%, #8aebff 42%, #55adff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility map-grid {
+  background-image:
+    linear-gradient(rgba(90, 176, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 176, 255, 0.09) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, #000 35%, transparent 78%);
+}
+
+@utility field {
+  margin-top: 0.4rem;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: 0.8rem 0.95rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@utility field-dark {
+  margin-top: 0.4rem;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.8rem 0.95rem;
+  color: white;
+  outline: none;
+}
+
+.field:focus,
+.field-dark:focus {
+  border-color: #1a86ff;
+  box-shadow: 0 0 0 4px rgba(26, 134, 255, 0.16);
+}
+
+select.field option,
+select.field-dark option {
+  color: #0c1730;
+  background-color: #ffffff;
+}
+
+.road-dash {
+  stroke-dasharray: 8 12;
+  animation: drive 14s linear infinite;
+}
+
+@keyframes drive {
+  to { stroke-dashoffset: -280; }
+}
+
+@keyframes floaty {
+  50% { transform: translateY(-8px); }
+}
+
+.floaty { animation: floaty 5.5s ease-in-out infinite; }
+
+.card-hover {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(26, 134, 255, 0.45);
+  box-shadow: 0 24px 50px -28px rgba(7, 18, 39, 0.55);
+}
