@@ -31,9 +31,8 @@ export const es = {
     drivers: "Conductores",
     legal: "Legal",
     rights: "Todos los derechos reservados.",
-    brand: "DameBola es una marca operada por DameBola LLC.",
+    brand: "DameBola es una marca propiedad de y operada por DameBola LLC.",
     florida: "DameBola LLC es una compañía de responsabilidad limitada registrada en Florida, Estados Unidos.",
-    socialSoon: "Las redes oficiales se publicarán aquí cuando estén disponibles.",
     privacy: "Política de privacidad",
     terms: "Términos y condiciones",
     cookies: "Cookies",
@@ -294,7 +293,7 @@ export const es = {
     factsTitle: "Lo que sí podemos decir hoy",
     facts: [
       "Estamos en pre-lanzamiento. La app todavía no está en las tiendas.",
-      "DameBola es una marca operada por DameBola LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos.",
+      "DameBola es una marca propiedad de y operada por DameBola LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos.",
       "El servicio está pensado para la República Dominicana.",
       "Las preinscripciones las revisa una persona. No hay aprobación automática.",
       "No publicamos comisiones, tarifas mínimas ni métodos de pago que no estén aprobados.",
@@ -347,7 +346,7 @@ export const es = {
   },
   companyInfo: {
     title: "Información de la empresa",
-    brand: "DameBola es una marca operada por DameBola LLC. Las aplicaciones móviles están en pre-lanzamiento y todavía no se pueden descargar.",
+    brand: "DameBola es una marca propiedad de y operada por DameBola LLC. Las aplicaciones móviles están en pre-lanzamiento y todavía no se pueden descargar.",
     legalName: "Nombre legal",
     legalNameValue: "DameBola LLC",
     registration: "Estado de registro",
@@ -372,7 +371,6 @@ export const es = {
     unavailable: "Próximamente en App Store y Google Play.",
     qr: "Código QR",
     qrHint: "El código aparece cuando el enlace oficial de la tienda está configurado.",
-    storeSoon: "Enlace de tienda sin publicar",
   },
   legal: {
     kicker: "Legal",

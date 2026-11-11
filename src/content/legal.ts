@@ -7,7 +7,7 @@ export type LegalDoc = {
 };
 
 const company =
-  "DameBola es una marca operada por DameBola LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos. Prepara un servicio de transporte enfocado en la República Dominicana. El sitio oficial es https://www.damebolaapp.com y el correo de contacto es Info@DameBolaApp.com.";
+  "DameBola es una marca propiedad de y operada por DameBola LLC, una compañía de responsabilidad limitada registrada en Florida, Estados Unidos. Prepara un servicio de transporte enfocado en la República Dominicana. El sitio oficial es https://www.damebolaapp.com y el correo de contacto es Info@DameBolaApp.com.";
 
 const docsEs: Record<string, LegalDoc> = {
   terminos: {
@@ -184,7 +184,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Terms and Conditions",
     description: "Terms for using the DameBola website.",
     blocks: [
-      { kind: "p", text: "DameBola is a brand operated by DameBola LLC, a limited liability company registered in Florida, United States, preparing a transportation service focused on the Dominican Republic. The official website is https://www.damebolaapp.com and the contact email is Info@DameBolaApp.com." },
+      { kind: "p", text: "DameBola is a brand owned and operated by DameBola LLC, a limited liability company registered in Florida, United States, preparing a transportation service focused on the Dominican Republic. The official website is https://www.damebolaapp.com and the contact email is Info@DameBolaApp.com." },
       { kind: "h", text: "What this website is" },
       { kind: "p", text: "This website introduces DameBola, explains negotiated fares, and accepts driver pre-registrations, messages, and launch subscriptions. It does not request or dispatch trips. That will belong to the mobile apps when they are published." },
       { kind: "h", text: "Acceptable use" },
@@ -207,7 +207,7 @@ const docsEn: Record<string, LegalDoc> = {
     title: "Privacy Policy",
     description: "The personal data the DameBola website collects and how it is used.",
     blocks: [
-      { kind: "p", text: "DameBola is a brand operated by DameBola LLC, a Florida limited liability company preparing a service for the Dominican Republic. Contact: Info@DameBolaApp.com." },
+      { kind: "p", text: "DameBola is a brand owned and operated by DameBola LLC, a Florida limited liability company preparing a service for the Dominican Republic. Contact: Info@DameBolaApp.com." },
       { kind: "h", text: "Data we collect" },
       { kind: "ul", items: [
         "Identity and contact details you type into forms: name, phone, email, city, and the reason for your message.",

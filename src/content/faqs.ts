@@ -77,7 +77,7 @@ export const faqSeed: FaqSeed[] = [
     sortOrder: 9,
     question: "¿Cómo contacto a soporte?",
     answer:
-      "Puedes escribir por el formulario de Contacto o al correo Info@DameBolaApp.com. El número de WhatsApp se mostrará en el sitio cuando esté confirmado.",
+      "Puedes escribir por el formulario de Contacto o al correo Info@DameBolaApp.com.",
   },
   {
     locale: "es",
@@ -213,7 +213,7 @@ export const faqSeed: FaqSeed[] = [
     sortOrder: 9,
     question: "How do I contact support?",
     answer:
-      "Use the Contact form or email Info@DameBolaApp.com. A WhatsApp number will appear on the site when it has been confirmed.",
+      "Use the Contact form or email Info@DameBolaApp.com.",
   },
   {
     locale: "en",
