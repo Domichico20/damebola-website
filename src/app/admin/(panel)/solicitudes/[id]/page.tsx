@@ -1,15 +1,19 @@
 import { notFound } from "next/navigation";
+import { ConfirmDeleteForm } from "@/components/admin/ConfirmDeleteForm";
 import { DocumentThumbs } from "@/components/admin/DocumentThumbs";
 import { prisma } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import { adminCopy } from "@/content/admin-ui";
-import { adminDateLocale, getAdminLocale } from "@/lib/admin-locale";
-import { updateApplication } from "@/server/admin";
+import { adminDateLocale, formatAdminDateTime, getAdminLocale } from "@/lib/admin-locale";
+import { deleteApplication, updateApplication } from "@/server/admin";
 
 const statusKeys = ["pending", "under_review", "approved", "rejected", "more_info"] as const;
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ aviso?: string }> }) {
   const { id } = await params;
   const query = await searchParams;
+  const session = await getSession();
+  const canDelete = session?.role === "owner" || session?.role === "admin";
   const locale = await getAdminLocale();
   const copy = adminCopy(locale);
   const dateLocale = adminDateLocale(locale);
@@ -18,15 +22,22 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     include: { documents: true, notes: { include: { author: true }, orderBy: { createdAt: "desc" } } },
   });
   if (!application) notFound();
-  const vehicle = `${application.vehicleType === "car" ? copy.common.car : copy.common.motorcycle} · ${application.vehicleMake} ${application.vehicleModel} ${application.vehicleYear}`;
   const fields = [
     [copy.application.name, `${application.firstName} ${application.lastName}`],
-    [copy.application.phone, application.phone],
-    ["WhatsApp", application.whatsapp || "—"],
     [copy.application.email, application.email],
-    [copy.application.city, `${application.city}, ${application.province}`],
-    [copy.application.vehicle, vehicle],
-    [copy.application.license, `${application.licenseNumber}${application.licenseExpiry ? ` · ${copy.application.expires} ${application.licenseExpiry}` : ""}`],
+    [copy.application.phone, application.phone],
+    [copy.common.whatsapp, application.whatsapp || "—"],
+    [copy.application.city, application.city],
+    [copy.applications.province, application.province],
+    [copy.application.vehicle, application.vehicleType === "car" ? copy.common.car : copy.common.motorcycle],
+    [copy.application.make, application.vehicleMake],
+    [copy.application.model, application.vehicleModel],
+    [copy.application.year, String(application.vehicleYear)],
+    [copy.application.license, application.licenseNumber],
+    [copy.application.expiry, application.licenseExpiry || "—"],
+    [copy.application.requirements, application.meetsRequirements ? copy.application.yes : "—"],
+    [copy.application.consent, application.privacyConsent ? copy.application.yes : "—"],
+    [copy.common.when, formatAdminDateTime(application.createdAt, locale)],
     [copy.application.reference, application.id.slice(-8).toUpperCase()],
     [copy.application.mailStatus, application.emailStatus],
   ];
@@ -60,7 +71,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           ))}
         </ul>
       </section>
-      <form action={updateApplication} className="h-fit rounded-3xl bg-white p-5 ring-1 ring-line">
+      <div className="h-fit space-y-3">
+      <form action={updateApplication} className="rounded-3xl bg-white p-5 ring-1 ring-line">
         <input type="hidden" name="id" value={application.id} />
         <h2 className="font-semibold">{copy.common.status}</h2>
         <p className="mt-1 text-sm text-slate">{copy.application.statusHelp}</p>
@@ -76,6 +88,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <label className="mt-3 flex items-start gap-2 text-sm"><input type="checkbox" name="notify" /> {copy.application.notify}</label>
         <button className="mt-4 min-h-12 rounded-full bg-blue-600 px-5 font-semibold text-white">{copy.common.save}</button>
       </form>
+      {canDelete ? <ConfirmDeleteForm action={deleteApplication} id={application.id} label={copy.application.delete} confirm={copy.application.deleteConfirm} /> : null}
+      </div>
     </div>
   );
 }

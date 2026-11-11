@@ -104,7 +104,8 @@ export function DocumentThumbs({
                 ) : (
                   <span className={`${thumb} flex items-center justify-center rounded-2xl bg-mist text-sm font-bold text-navy-950 ring-1 ring-line`}>PDF</span>
                 )}
-                <span className="mt-1 block max-w-28 truncate text-xs font-semibold text-slate">{label}</span>
+                <span className="mt-1 block max-w-28 text-xs font-semibold text-slate">{label}</span>
+                <span className="block max-w-28 truncate text-xs text-slate">{doc.originalName}</span>
               </button>
             </li>
           );

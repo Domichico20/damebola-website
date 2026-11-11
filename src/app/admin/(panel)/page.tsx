@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
-import { adminDateLocale, getAdminLocale } from "@/lib/admin-locale";
+import { formatAdminDateTime, getAdminLocale } from "@/lib/admin-locale";
 import { adminCopy } from "@/content/admin-ui";
 import { redirect } from "next/navigation";
 
@@ -13,7 +13,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
   const query = await searchParams;
   const locale = await getAdminLocale();
   const copy = adminCopy(locale);
-  const dateLocale = adminDateLocale(locale);
   const since = new Date();
   since.setDate(since.getDate() - 6);
   const day = since.toISOString().slice(0, 10);
@@ -55,7 +54,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           <h2 className="font-semibold">{copy.dashboard.recentApps}</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {recentApps.length === 0 ? <li className="text-slate">{copy.dashboard.noApps}</li> : recentApps.map((item) => (
-              <li key={item.id}><Link className="font-semibold text-blue-700" href={`/admin/solicitudes/${item.id}`}>{item.firstName} {item.lastName}</Link> · {item.city} · {status(item.status)} · {item.createdAt.toLocaleDateString(dateLocale)}</li>
+              <li key={item.id}><Link className="font-semibold text-blue-700" href={`/admin/solicitudes/${item.id}`}>{item.firstName} {item.lastName}</Link> · {item.email} · {item.phone} · {item.city} · {status(item.status)} · {formatAdminDateTime(item.createdAt, locale)}</li>
             ))}
           </ul>
         </section>
@@ -63,7 +62,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           <h2 className="font-semibold">{copy.dashboard.recentMessages}</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {recentMessages.length === 0 ? <li className="text-slate">{copy.dashboard.noMessages}</li> : recentMessages.map((item) => (
-              <li key={item.id}><Link className="font-semibold text-blue-700" href={`/admin/mensajes/${item.id}`}>{item.fullName}</Link> · {category(item.category)} · {status(item.status)}</li>
+              <li key={item.id}><Link className="font-semibold text-blue-700" href={`/admin/mensajes/${item.id}`}>{item.fullName}</Link> · {item.email} · {item.phone || "—"} · {category(item.category)} · {status(item.status)} · {formatAdminDateTime(item.createdAt, locale)}</li>
             ))}
           </ul>
         </section>

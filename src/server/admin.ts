@@ -13,6 +13,7 @@ import { escapeHtml, layout, sendMail, smtpConfigured } from "@/lib/email";
 import { clientIpHash, sha256 } from "@/lib/request";
 import { rateLimit } from "@/lib/rate-limit";
 import { siteUrl } from "@/lib/routes";
+import { removePrivateFile } from "@/lib/files";
 import { applicationStatuses, inquiryStatuses, roles, type Role } from "@/lib/validators";
 
 export type AuthState = { message: string; totpRequired?: boolean; codes?: string[]; password?: string };
@@ -270,6 +271,28 @@ export async function deleteInquiry(formData: FormData) {
   await prisma.contactInquiry.delete({ where: { id } });
   await writeAudit({ actorId: session.id, action: "inquiry_delete", entityType: "inquiry", entityId: id });
   redirect("/admin/mensajes");
+}
+
+export async function deleteApplication(formData: FormData) {
+  const session = await actor(["owner", "admin"]);
+  const id = String(formData.get("id") || "");
+  const application = await prisma.driverApplication.findUnique({ where: { id }, include: { documents: true } });
+  if (!application) redirect("/admin/solicitudes");
+  const stored = application.documents.map((document) => document.storedName);
+  await prisma.driverApplication.delete({ where: { id } });
+  await Promise.all(stored.map((name) => removePrivateFile(name)));
+  await writeAudit({ actorId: session.id, action: "application_delete", entityType: "application", entityId: id });
+  redirect("/admin/solicitudes");
+}
+
+export async function deleteSubscriber(formData: FormData) {
+  const session = await actor(["owner", "admin"]);
+  const id = String(formData.get("id") || "");
+  const subscriber = await prisma.subscriber.findUnique({ where: { id } });
+  if (!subscriber) redirect("/admin/suscriptores");
+  await prisma.subscriber.delete({ where: { id } });
+  await writeAudit({ actorId: session.id, action: "subscriber_delete", entityType: "subscriber", entityId: id });
+  redirect("/admin/suscriptores");
 }
 
 const contentKeys = [
