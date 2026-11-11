@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { startTransition, useActionState, useMemo, useState, type FormEvent } from "react";
 import type { Dictionary } from "@/content/types";
 import { emptyPublicState } from "@/lib/form-state";
 import { submitDriver } from "@/server/public";
@@ -101,7 +101,18 @@ export function DriverForm({
   }
 
   return (
-    <form action={action} className="relative rounded-3xl bg-white p-5 text-ink shadow-xl ring-1 ring-line md:p-8" noValidate>
+    <form
+      action={action}
+      className="relative rounded-3xl bg-white p-5 text-ink shadow-xl ring-1 ring-line md:p-8"
+      noValidate
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        startTransition(() => {
+          action(formData);
+        });
+      }}
+    >
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="startedAt" value={String(startedAt)} />
       <p className="absolute -left-[9999px]" aria-hidden="true">

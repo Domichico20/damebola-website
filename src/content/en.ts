@@ -221,7 +221,7 @@ export const en: Dictionary = {
     licenseFile: "Driver's license",
     registrationFile: "Vehicle registration",
     insuranceFile: "Insurance",
-    otherFile: "Other document",
+    otherFile: "Cédula",
     meets: "I confirm that I read the requirements published on this page and that the information I am sending is true.",
     privacy: "I agree that DameBola may process my data and any documents I attach to review this pre-registration, as described in the Privacy Policy.",
     next: "Continue",

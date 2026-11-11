@@ -220,7 +220,7 @@ export const es = {
     licenseFile: "Licencia de conducir",
     registrationFile: "Matrícula del vehículo",
     insuranceFile: "Seguro",
-    otherFile: "Otro documento",
+    otherFile: "Cédula",
     meets: "Confirmo que leí los requisitos publicados en esta página y que los datos que envío son verdaderos.",
     privacy: "Acepto que DameBola trate mis datos y los documentos que adjunte para revisar esta preinscripción, según la Política de privacidad.",
     next: "Continuar",

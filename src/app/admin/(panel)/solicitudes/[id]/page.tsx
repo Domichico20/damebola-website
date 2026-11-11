@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { DocumentThumbs } from "@/components/admin/DocumentThumbs";
 import { prisma } from "@/lib/db";
 import { adminCopy } from "@/content/admin-ui";
 import { adminDateLocale, getAdminLocale } from "@/lib/admin-locale";
@@ -38,11 +39,17 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           {fields.map(([label, value]) => <div key={label}><dt className="text-slate">{label}</dt><dd className="font-semibold">{value}</dd></div>)}
         </dl>
         <h2 className="mt-6 font-semibold">{copy.application.documents}</h2>
-        <ul className="mt-2 space-y-2 text-sm">
-          {application.documents.length === 0 ? <li className="text-slate">{copy.application.noDocuments}</li> : application.documents.map((doc) => (
-            <li key={doc.id}><a className="font-semibold text-blue-700" href={`/api/admin/documents/${doc.id}`}>{doc.originalName}</a> · {doc.kind} · {Math.ceil(doc.size / 1024)} KB</li>
-          ))}
-        </ul>
+        {application.documents.length === 0 ? <p className="mt-2 text-sm text-slate">{copy.application.noDocuments}</p> : (
+          <DocumentThumbs
+            documents={application.documents.map((doc) => ({ id: doc.id, originalName: doc.originalName, mimeType: doc.mimeType, kind: doc.kind }))}
+            kinds={copy.application.kinds}
+            zoomIn={copy.application.zoomIn}
+            zoomOut={copy.application.zoomOut}
+            download={copy.application.download}
+            close={copy.application.close}
+            previewFailed={copy.application.previewFailed}
+          />
+        )}
         <h2 className="mt-6 font-semibold">{copy.application.notes}</h2>
         <ul className="mt-2 space-y-3 text-sm">
           {application.notes.map((note) => (

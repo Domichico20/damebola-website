@@ -1,12 +1,22 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { startTransition, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useActionState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { Dictionary } from "@/content/types";
 import { emptyPublicState } from "@/lib/form-state";
 import { confirmUnsubscribe, submitContact, submitNewsletter } from "@/server/public";
 import type { Locale } from "@/lib/routes";
+
+function keepEnteredValues(action: (payload: FormData) => void) {
+  return (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    startTransition(() => {
+      action(formData);
+    });
+  };
+}
 
 export function ContactForm({
   locale,
@@ -32,7 +42,7 @@ export function ContactForm({
     );
   }
   return (
-    <form action={action} className="relative grid gap-4 rounded-3xl bg-white p-5 shadow-xl ring-1 ring-line md:p-8" noValidate>
+    <form action={action} onSubmit={keepEnteredValues(action)} className="relative grid gap-4 rounded-3xl bg-white p-5 shadow-xl ring-1 ring-line md:p-8" noValidate>
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="startedAt" value={startedAt} />
       <p className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
@@ -73,7 +83,7 @@ export function NewsletterForm({ locale, dict, dark = false }: { locale: Locale;
     );
   }
   return (
-    <form action={action} className={dark ? "relative grid gap-3 rounded-3xl bg-white/10 p-5 ring-1 ring-white/15 md:grid-cols-2" : "relative grid gap-3 rounded-3xl bg-white p-5 ring-1 ring-line md:grid-cols-2"}>
+    <form action={action} onSubmit={keepEnteredValues(action)} className={dark ? "relative grid gap-3 rounded-3xl bg-white/10 p-5 ring-1 ring-white/15 md:grid-cols-2" : "relative grid gap-3 rounded-3xl bg-white p-5 ring-1 ring-line md:grid-cols-2"}>
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="startedAt" value={startedAt} />
       <p className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></p>

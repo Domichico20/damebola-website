@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DocumentThumbs } from "@/components/admin/DocumentThumbs";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { adminCopy } from "@/content/admin-ui";
@@ -31,7 +32,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
       : {}),
   };
   const [rows, total] = await Promise.all([
-    prisma.driverApplication.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * 20, take: 20 }),
+    prisma.driverApplication.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * 20, take: 20, include: { documents: true } }),
     prisma.driverApplication.count({ where }),
   ]);
   return (
@@ -55,16 +56,30 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         <button className="rounded-full bg-blue-600 font-semibold text-white">{copy.common.filter}</button>
       </form>
       <div className="mt-4 overflow-x-auto rounded-3xl bg-white ring-1 ring-line">
-        <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="text-slate"><tr><th className="p-3">{copy.common.person}</th><th>{copy.common.city}</th><th>{copy.common.vehicle}</th><th>{copy.common.status}</th><th>{copy.common.date}</th></tr></thead>
+        <table className="w-full min-w-[980px] text-left text-sm">
+          <thead className="text-slate"><tr><th className="p-3">{copy.common.person}</th><th>{copy.common.city}</th><th>{copy.common.vehicle}</th><th>{copy.common.status}</th><th>{copy.common.date}</th><th>{copy.application.documents}</th></tr></thead>
           <tbody>
-            {rows.length === 0 ? <tr><td className="p-4 text-slate" colSpan={5}>{copy.applications.empty}</td></tr> : rows.map((row) => (
-              <tr key={row.id} className="border-t border-line">
+            {rows.length === 0 ? <tr><td className="p-4 text-slate" colSpan={6}>{copy.applications.empty}</td></tr> : rows.map((row) => (
+              <tr key={row.id} className="border-t border-line align-top">
                 <td className="p-3"><Link className="font-semibold text-blue-700" href={`/admin/solicitudes/${row.id}`}>{row.firstName} {row.lastName}</Link><div className="text-slate">{row.email}</div></td>
-                <td>{row.city}</td>
-                <td>{row.vehicleType === "car" ? copy.common.car : copy.common.motorcycle}</td>
-                <td>{copy.status[row.status as keyof typeof copy.status] || row.status}</td>
-                <td>{row.createdAt.toLocaleDateString(dateLocale)}</td>
+                <td className="p-3">{row.city}</td>
+                <td className="p-3">{row.vehicleType === "car" ? copy.common.car : copy.common.motorcycle}</td>
+                <td className="p-3">{copy.status[row.status as keyof typeof copy.status] || row.status}</td>
+                <td className="p-3">{row.createdAt.toLocaleDateString(dateLocale)}</td>
+                <td className="p-3">
+                  {row.documents.length === 0 ? <span className="text-slate">—</span> : (
+                    <DocumentThumbs
+                      documents={row.documents.map((doc) => ({ id: doc.id, originalName: doc.originalName, mimeType: doc.mimeType, kind: doc.kind }))}
+                      kinds={copy.application.kinds}
+                      zoomIn={copy.application.zoomIn}
+                      zoomOut={copy.application.zoomOut}
+                      download={copy.application.download}
+                      close={copy.application.close}
+                      previewFailed={copy.application.previewFailed}
+                      size="sm"
+                    />
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -3,7 +3,7 @@ import { DeleteMessageForm } from "@/components/admin/DeleteMessageForm";
 import { prisma } from "@/lib/db";
 import { adminCopy } from "@/content/admin-ui";
 import { getSession } from "@/lib/auth";
-import { getAdminLocale } from "@/lib/admin-locale";
+import { formatAdminDateTime, getAdminLocale } from "@/lib/admin-locale";
 import { updateInquiry } from "@/server/admin";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ aviso?: string }> }) {
@@ -25,6 +25,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <h1 className="font-display text-3xl font-semibold">{inquiry.fullName}</h1>
         {query.aviso === "guardado" ? <p className="mt-2 text-sm text-success">{copy.common.saved}</p> : null}
         <p className="mt-2 text-sm text-slate">{inquiry.email} {inquiry.phone ? `· ${inquiry.phone}` : ""} · {category}</p>
+        <p className="mt-1 text-sm text-slate">{copy.common.when}: {formatAdminDateTime(inquiry.createdAt, locale)}</p>
         <p className="mt-4 whitespace-pre-line leading-relaxed">{inquiry.message}</p>
         <h2 className="mt-6 font-semibold">{copy.messages.history}</h2>
         <ul className="mt-2 space-y-3 text-sm">

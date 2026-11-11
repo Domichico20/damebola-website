@@ -11,3 +11,10 @@ export async function getAdminLocale(): Promise<AdminLocale> {
 export function adminDateLocale(locale: AdminLocale) {
   return locale === "en" ? "en-US" : "es-DO";
 }
+
+export function formatAdminDateTime(value: Date, locale: AdminLocale) {
+  return new Intl.DateTimeFormat(adminDateLocale(locale), {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
+}
