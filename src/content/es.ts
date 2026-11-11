@@ -413,7 +413,6 @@ export const es = {
       interest: "Dinos si te interesa viajar, conducir o las dos.",
     },
     subscribed: "Quedaste en la lista.",
-    subscribedDetail: "Si el correo está activo, te llegará una confirmación. También puedes guardar este enlace para darte de baja:",
     already: "Ese correo ya está en la lista.",
     unsubscribed: "Listo. Ese correo ya no recibirá avisos de lanzamiento.",
     confirmUnsub: "Confirmar baja",

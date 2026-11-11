@@ -4,8 +4,10 @@ import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 import { Secret, TOTP } from "otpauth";
 import { redirect } from "next/navigation";
+import { adminCopy } from "@/content/admin-ui";
 import { prisma } from "@/lib/db";
 import { clearSessionCookie, getSession, safeNextPath, setSessionCookie, signSession } from "@/lib/auth";
+import { getAdminLocale } from "@/lib/admin-locale";
 import { writeAudit } from "@/lib/audit";
 import { escapeHtml, layout, sendMail, smtpConfigured } from "@/lib/email";
 import { clientIpHash, sha256 } from "@/lib/request";
@@ -22,6 +24,10 @@ async function actor(allowed?: Role[]) {
   return session;
 }
 
+async function flash<K extends keyof ReturnType<typeof adminCopy>["flash"]>(key: K) {
+  return adminCopy(await getAdminLocale()).flash[key];
+}
+
 function strong(password: string) {
   return password.length >= 12 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password);
 }
@@ -32,17 +38,17 @@ export async function loginAction(_prev: AuthState, formData: FormData): Promise
   const code = String(formData.get("code") || "").replace(/\s/g, "");
   const ipHash = await clientIpHash();
   const allowed = await rateLimit(`login:${ipHash}:${email}`, 8, 15 * 60 * 1000);
-  if (!allowed) return { message: "Demasiados intentos. Espera unos minutos." };
+  if (!allowed) return { message: await flash("tooMany") };
   const user = await prisma.adminUser.findUnique({ where: { email } });
   const valid = user && user.active && (await bcrypt.compare(password, user.passwordHash));
-  if (!user || !valid) return { message: "Correo o contraseña incorrectos." };
+  if (!user || !valid) return { message: await flash("badLogin") };
   if (user.totpEnabled) {
-    if (!code) return { totpRequired: true, message: "Escribe el código de la aplicación de autenticación o un código de recuperación." };
+    if (!code) return { totpRequired: true, message: await flash("needCode") };
     const totp = new TOTP({ secret: Secret.fromBase32(user.totpSecret || ""), algorithm: "SHA1", digits: 6, period: 30 });
     const totpOk = totp.validate({ token: code, window: 1 }) !== null;
     const recovery = await prisma.recoveryCode.findMany({ where: { userId: user.id, usedAt: null } });
     const match = recovery.find((item) => item.codeHash === sha256(code.toUpperCase()));
-    if (!totpOk && !match) return { totpRequired: true, message: "El código no es válido." };
+    if (!totpOk && !match) return { totpRequired: true, message: await flash("badCode") };
     if (match) await prisma.recoveryCode.update({ where: { id: match.id }, data: { usedAt: new Date() } });
   }
   await prisma.adminUser.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
@@ -60,8 +66,9 @@ export async function logoutAction() {
 
 export async function requestReset(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") || "").trim().toLowerCase();
-  const generic = "Si la cuenta existe y el correo está configurado, enviaremos un enlace.";
-  if (!smtpConfigured()) return { message: "La recuperación por correo no está disponible porque el servidor de correo no está configurado." };
+  const locale = await getAdminLocale();
+  const generic = adminCopy(locale).flash.resetGeneric;
+  if (!smtpConfigured()) return { message: adminCopy(locale).flash.resetUnavailable };
   const user = await prisma.adminUser.findUnique({ where: { email } });
   if (user && user.active) {
     const raw = randomBytes(32).toString("base64url");
@@ -69,11 +76,13 @@ export async function requestReset(_prev: AuthState, formData: FormData): Promis
       data: { userId: user.id, tokenHash: sha256(raw), expiresAt: new Date(Date.now() + 30 * 60 * 1000) },
     });
     const url = `${siteUrl()}/admin/restablecer/${raw}`;
+    const subject = locale === "en" ? "Reset your DameBola access" : "Restablecer acceso a DameBola";
+    const body = locale === "en" ? "Use this link within the next 30 minutes." : "Usa este enlace en los próximos 30 minutos.";
     await sendMail({
       to: user.email,
-      subject: "Restablecer acceso a DameBola",
-      text: `Usa este enlace en los próximos 30 minutos: ${url}`,
-      html: layout("Restablecer acceso", `<p>Usa este enlace en los próximos 30 minutos.</p><p><a href="${escapeHtml(url)}">${escapeHtml(url)}</a></p>`),
+      subject,
+      text: `${body} ${url}`,
+      html: layout(subject, `<p>${body}</p><p><a href="${escapeHtml(url)}">${escapeHtml(url)}</a></p>`),
     });
     await writeAudit({ actorId: user.id, action: "password_reset_request" });
   }
@@ -84,10 +93,10 @@ export async function resetPassword(_prev: AuthState, formData: FormData): Promi
   const token = String(formData.get("token") || "");
   const password = String(formData.get("password") || "");
   const confirm = String(formData.get("confirm") || "");
-  if (password !== confirm) return { message: "Las contraseñas no coinciden." };
-  if (!strong(password)) return { message: "Usa al menos 12 caracteres, con mayúscula, minúscula y número." };
+  if (password !== confirm) return { message: await flash("mismatch") };
+  if (!strong(password)) return { message: await flash("weak") };
   const row = await prisma.passwordReset.findUnique({ where: { tokenHash: sha256(token) } });
-  if (!row || row.usedAt || row.expiresAt < new Date()) return { message: "El enlace no es válido o ya venció." };
+  if (!row || row.usedAt || row.expiresAt < new Date()) return { message: await flash("badLink") };
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.adminUser.update({
     where: { id: row.userId },
@@ -105,15 +114,15 @@ export async function changePassword(_prev: AuthState, formData: FormData): Prom
   const password = String(formData.get("password") || "");
   const confirm = String(formData.get("confirm") || "");
   const user = await prisma.adminUser.findUnique({ where: { id: session.id } });
-  if (!user || !(await bcrypt.compare(current, user.passwordHash))) return { message: "La contraseña actual no es correcta." };
-  if (password !== confirm || !strong(password)) return { message: "La nueva contraseña debe tener 12 caracteres, mayúscula, minúscula y número, y coincidir." };
+  if (!user || !(await bcrypt.compare(current, user.passwordHash))) return { message: await flash("badCurrent") };
+  if (password !== confirm || !strong(password)) return { message: await flash("weakMatch") };
   const updated = await prisma.adminUser.update({
     where: { id: user.id },
     data: { passwordHash: await bcrypt.hash(password, 12), sessionVersion: { increment: 1 }, mustChangePassword: false },
   });
   await setSessionCookie(await signSession(updated));
   await writeAudit({ actorId: user.id, action: "password_change" });
-  return { message: "Contraseña actualizada." };
+  return { message: await flash("passwordUpdated") };
 }
 
 export async function beginTotp() {
@@ -126,26 +135,26 @@ export async function beginTotp() {
 export async function confirmTotp(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const session = await actor();
   const user = await prisma.adminUser.findUnique({ where: { id: session.id } });
-  if (!user?.totpSecret) return { message: "Primero genera un código QR." };
+  if (!user?.totpSecret) return { message: await flash("needQr") };
   const totp = new TOTP({ issuer: "DameBola", label: user.email, secret: Secret.fromBase32(user.totpSecret), algorithm: "SHA1", digits: 6, period: 30 });
   const code = String(formData.get("code") || "").replace(/\s/g, "");
-  if (totp.validate({ token: code, window: 1 }) === null) return { message: "Ese código no coincide." };
+  if (totp.validate({ token: code, window: 1 }) === null) return { message: await flash("codeMismatch") };
   const codes = Array.from({ length: 8 }, () => `${randomBytes(2).toString("hex")}-${randomBytes(2).toString("hex")}`.toUpperCase());
   await prisma.recoveryCode.deleteMany({ where: { userId: user.id } });
   await prisma.recoveryCode.createMany({ data: codes.map((value) => ({ userId: user.id, codeHash: sha256(value) })) });
   await prisma.adminUser.update({ where: { id: user.id }, data: { totpEnabled: true } });
   await writeAudit({ actorId: user.id, action: "totp_enable" });
-  return { message: "Doble factor activo. Guarda estos códigos. No se volverán a mostrar.", codes };
+  return { message: await flash("totpOn"), codes };
 }
 
 export async function disableOwnTotp(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const session = await actor();
   const user = await prisma.adminUser.findUnique({ where: { id: session.id } });
-  if (!user || !(await bcrypt.compare(String(formData.get("password") || ""), user.passwordHash))) return { message: "Contraseña incorrecta." };
+  if (!user || !(await bcrypt.compare(String(formData.get("password") || ""), user.passwordHash))) return { message: await flash("badPassword") };
   await prisma.adminUser.update({ where: { id: user.id }, data: { totpEnabled: false, totpSecret: null } });
   await prisma.recoveryCode.deleteMany({ where: { userId: user.id } });
   await writeAudit({ actorId: user.id, action: "totp_disable" });
-  return { message: "Doble factor desactivado." };
+  return { message: await flash("totpOff") };
 }
 
 export async function createStaff(_prev: AuthState, formData: FormData): Promise<AuthState> {
@@ -154,7 +163,7 @@ export async function createStaff(_prev: AuthState, formData: FormData): Promise
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const role = String(formData.get("role") || "");
   if (name.length < 2 || !email.includes("@") || !roles.includes(role as Role) || role === "owner") {
-    return { message: "Revisa nombre, correo y rol. Un propietario no se crea desde aquí." };
+    return { message: await flash("staffCheck") };
   }
   const password = randomBytes(9).toString("base64url");
   try {
@@ -162,9 +171,9 @@ export async function createStaff(_prev: AuthState, formData: FormData): Promise
       data: { name, email, role, passwordHash: await bcrypt.hash(password, 12), mustChangePassword: true },
     });
     await writeAudit({ actorId: session.id, action: "staff_create", entityType: "admin", entityId: user.id });
-    return { message: `Cuenta creada para ${email}. La contraseña temporal se muestra una sola vez.`, password };
+    return { message: (await flash("staffCreated")).replace("{email}", email), password };
   } catch {
-    return { message: "No se pudo crear. ¿Ese correo ya existe?" };
+    return { message: await flash("staffFailed") };
   }
 }
 
@@ -251,6 +260,16 @@ export async function updateInquiry(formData: FormData) {
   }
   await writeAudit({ actorId: session.id, action: "inquiry_update", entityId: id, metadata: { status } });
   redirect(`/admin/mensajes/${id}?aviso=guardado`);
+}
+
+export async function deleteInquiry(formData: FormData) {
+  const session = await actor(["owner", "admin"]);
+  const id = String(formData.get("id") || "");
+  const inquiry = await prisma.contactInquiry.findUnique({ where: { id } });
+  if (!inquiry) redirect("/admin/mensajes");
+  await prisma.contactInquiry.delete({ where: { id } });
+  await writeAudit({ actorId: session.id, action: "inquiry_delete", entityType: "inquiry", entityId: id });
+  redirect("/admin/mensajes");
 }
 
 const contentKeys = [

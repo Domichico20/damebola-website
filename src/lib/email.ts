@@ -6,13 +6,17 @@ export function smtpConfigured() {
 }
 
 function transport() {
+  const port = Number(process.env.SMTP_PORT || 587);
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: Number(process.env.SMTP_PORT || 587) === 465,
+    port,
+    secure: port === 465,
     auth: process.env.SMTP_USER
       ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS || "" }
       : undefined,
+    connectionTimeout: 8000,
+    greetingTimeout: 8000,
+    socketTimeout: 10000,
   });
 }
 
@@ -40,13 +44,16 @@ function layout(title: string, body: string) {
 export async function sendMail(input: { to: string; subject: string; text: string; html: string }) {
   if (!smtpConfigured()) return "not_configured" as const;
   try {
-    await transport().sendMail({
-      from: process.env.SMTP_FROM,
-      to: input.to,
-      subject: input.subject,
-      text: input.text,
-      html: input.html,
-    });
+    await Promise.race([
+      transport().sendMail({
+        from: process.env.SMTP_FROM,
+        to: input.to,
+        subject: input.subject,
+        text: input.text,
+        html: input.html,
+      }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("email timeout")), 12000)),
+    ]);
     return "sent" as const;
   } catch (error) {
     console.error("email failed", error);

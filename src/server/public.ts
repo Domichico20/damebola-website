@@ -293,7 +293,7 @@ export async function submitNewsletter(_prev: PublicState, formData: FormData): 
         }),
       }).catch((error) => console.error("marketing webhook failed", error));
     }
-    return { ok: true, message: dict.forms.subscribed, fieldErrors: {}, unsubscribeUrl };
+    return { ok: true, message: dict.forms.subscribed, fieldErrors: {} };
   } catch (error) {
     console.error(error);
     return { ok: false, message: dict.forms.errors.generic, fieldErrors: {} };

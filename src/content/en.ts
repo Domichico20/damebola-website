@@ -414,7 +414,6 @@ export const en: Dictionary = {
       interest: "Tell us if you want to ride, drive, or both.",
     },
     subscribed: "You're on the list.",
-    subscribedDetail: "If email is active, a confirmation will arrive. You can also keep this link to unsubscribe:",
     already: "That email is already on the list.",
     unsubscribed: "Done. That email will no longer get launch news.",
     confirmUnsub: "Confirm unsubscribe",

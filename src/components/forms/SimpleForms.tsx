@@ -69,11 +69,6 @@ export function NewsletterForm({ locale, dict, dark = false }: { locale: Locale;
       <div className={dark ? "rounded-3xl bg-white/10 p-6 text-white ring-1 ring-white/15" : "rounded-3xl bg-white p-6 ring-1 ring-line"} role="status">
         <h3 className="font-display text-2xl font-semibold">{form.subscribed}</h3>
         {state.message && state.message !== form.subscribed ? <p className="mt-2 leading-relaxed opacity-80">{state.message}</p> : null}
-        {state.unsubscribeUrl ? (
-          <p className="mt-4 break-all text-sm">
-            {form.subscribedDetail} <a className="font-semibold underline" href={state.unsubscribeUrl}>{state.unsubscribeUrl}</a>
-          </p>
-        ) : null}
       </div>
     );
   }
